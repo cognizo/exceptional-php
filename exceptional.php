@@ -118,7 +118,11 @@ class Exceptional {
 
         if (Exceptional::$api_key != null) {
             $data = new ExceptionalData($exception);
-            ExceptionalRemote::send_exception($data);
+
+            // Queue the error for processing later. This prevents occasional exceptional.io slowness from
+            // affecting CATS page loads.
+            ErrorReporting::queue($data);
+            //ExceptionalRemote::send_exception($data);
         }
 
         // if there's a previous exception handler, we call that as well
