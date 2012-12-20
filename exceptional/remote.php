@@ -9,7 +9,15 @@ class ExceptionalRemote {
         $hash_param = ($uniqueness_hash) ? null : "&hash={$uniqueness_hash}";
         $url = "/api/errors?api_key=".Exceptional::$api_key."&protocol_version=".Exceptional::$protocol_version.$hash_param;
         $compressed = gzencode($exception->to_json(), 1);
-        self::call_remote($url, $compressed);
+
+        // Queue the error for processing later. This prevents occasional exceptional.io slowness from
+        // affecting CATS page loads.
+        ErrorReporting::queue([
+            'url'  => $url,
+            'post' => $compressed
+        ]);
+
+        //self::call_remote($url, $compressed);
     }
 
     /*
