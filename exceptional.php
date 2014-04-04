@@ -117,7 +117,7 @@ class Exceptional {
      * integration.
      */
     static function handle_exception($exception, $call_previous = true) {
-        self::$exceptions[] = $exception;
+        //self::$exceptions[] = $exception;
 
         if (Exceptional::$api_key != null) {
             $data = new ExceptionalData($exception);
